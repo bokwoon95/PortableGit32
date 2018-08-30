@@ -1,0 +1,15 @@
+[core]
+  pager = less
+  excludesfile = ~/.gitignore
+[alias]
+  d = difftool
+  dc = difftool --cached
+  diffc = diff --cached
+  pr = pull --rebase
+[user]
+	email = admaterialsit@gmail.com
+	name = admaterialsit
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = true
