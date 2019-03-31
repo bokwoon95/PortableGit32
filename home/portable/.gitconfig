@@ -1,15 +1,89 @@
-[core]
-  pager = less
-  excludesfile = ~/.gitignore
-[alias]
-  d = difftool
-  dc = difftool --cached
-  diffc = diff --cached
-  pr = pull --rebase
 [user]
-	email = admaterialsit@gmail.com
-	name = admaterialsit
+	name = bokwoon
+	email = bokwoon.c@gmail.com
+[credential]
+	helper = manager
+[core]
+	excludesfile = ~/.gitignore
+	pager = less
+	editor = vim
+[pull]
+	rebase = true
 [diff]
 	tool = vimdiff
+	algorithm = patience
 [difftool]
 	prompt = true
+[commit]
+	verbose = true
+[alias]
+	s = status
+	l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --reflog
+	ll = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	commits = "!commits() {\
+	if [ $# -eq 0 ];\
+	then git add . && git commit -v;\
+	else git add . && git commit -vm \"$@\";\
+	fi;\
+	}; commits"
+	commitpush = "!commitpush() {\
+	if [ $# -eq 0 ];\
+	then git add . && git commit -v && git push origin $(git branch | grep \\* | cut -d ' ' -f2);\
+	else git add . && git commit -vm \"$@\" && git push origin $(git branch | grep \\* | cut -d ' ' -f2);\
+	fi;\
+	}; commitpush"
+	somecommitpush = "!somecommitpush() {\
+	if [ $# -eq 0 ];\
+	then git commit -v && git push origin $(git branch | grep \\* | cut -d ' ' -f2);\
+	else git commit -v --message=\"$@\" && git push origin $(git branch | grep \\* | cut -d ' ' -f2);\
+	fi;\
+	}; somecommitpush"
+	pulll = "!pulll() { git stash --include-untracked && git pull --rebase && git stash pop; }; pulll"
+	goto = "!goto() { git checkout \"$1\" && git branch -f master HEAD && git checkout master; }; goto"
+	fixpush = "!fixpush() { git reset --soft HEAD~1 && git reset . && git stash --include-untracked && git pull --rebase && git stash pop; }; fixpush"
+	forcepull = "!forcepull() { git fetch --all && git reset --hard origin/$(git branch | grep \\* | cut -d ' ' -f2); }; forcepull"
+	forcepush = push -f
+	undocommit = "!undocommit() { git reset --soft HEAD~1 && git reset .; }; undocommit"
+	cheatsheet = "!\
+	echo '   s                     git status';\
+	echo '   l                     Shows the commit log';\
+	echo;\
+	echo '   commits [msg]         Make new commit with a message';\
+	echo '   commitpush [msg]      Make new commit with a message & push to GitHub';\
+	echo '   pulll                 git pull without overwriting local files';\
+	echo;\
+	echo '   goto [commit]         Goto a particular commit';\
+	echo '   fixpush               Fixes a failed push if you forgot to pull before pushing';\
+	echo '   forcepull             Forcibly overwrite your repo with GitHubs repo';\
+	echo '   forcepush             Forcibly overwrite Githubs repo with your repo';\
+	echo '   undocommit            Undo your last commit from the git log';\
+	"
+	b = branch
+	ra = reset .
+	rs = "!rs() { git reset --soft HEAD~1 && git reset .; }; rs"
+	a = add
+	aa = add .
+	ap = add -p
+	c = checkout
+	cb = checkout -b
+	diffc = diff --cached
+	d = difftool
+	dc = difftool --cached
+	co = commit
+	checkdangling = fsck --unreachable --no-reflogs
+	prunedangling = "!prunedangling() {\
+	git reflog expire --expire-unreachable=now --all;\
+	git gc --prune=now;\
+	}; prunedangling"
+	em = "!em() {\
+	[ -z $EDITOR ] && EDITOR='vim';\
+	$EDITOR $(git status --porcelain | awk '{print $2}');\
+	}; em"
+	ec = "!ec() {\
+	[ -z $EDITOR ] && EDITOR='vim';\
+	git diff --name-only | uniq | xargs $EDITOR;\
+	}; ec"
+	copyfile = "!copyfile() {\
+	git checkout $1 $2;\
+	git status;\
+	}; copyfile"
